@@ -1,0 +1,11 @@
+.dgxdonatecentered, th.dgxdonatecentered
+{
+	text-align: center;
+}
+
+.dgxdonateadminfooter
+{
+	text-align: right;
+	color: #777;
+	padding-right: 5px;
+}
