@@ -3,7 +3,7 @@ Contributors: allendav, designgeneers
 Donate link: http://www.allendav.com/
 Tags: donation, donations, paypal, donate, non-profit, charity, gifts
 Requires at least: 3.4
-Tested up to: 3.8.1
+Tested up to: 4.0
 Stable tag: 3.2.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
