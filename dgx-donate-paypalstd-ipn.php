@@ -135,7 +135,7 @@ class Dgx_Donate_IPN_Handler {
 						// some reason) - so we will have to create a donation record
 						// from the data supplied by PayPal
 
-						$donation_id = dgx_donate_create_donation_from_paypal_data( $_POST );
+						$donation_id = dgx_donate_create_donation_from_paypal_data( $this->post_data );
 						dgx_donate_debug_log( "Created donation {$donation_id} from PayPal data (no transient data found)" );
 					}
 				} else {
@@ -160,7 +160,7 @@ class Dgx_Donate_IPN_Handler {
 				update_post_meta( $donation_id, '_dgx_donate_payment_processor', 'PAYPALSTD' );
 				update_post_meta( $donation_id, '_dgx_donate_payment_processor_data', $this->post_data );
 				// save the currency of the transaction
-				$currency_code = $_POST['mc_currency'];
+				$currency_code = $this->post_data['mc_currency'];
 				dgx_donate_debug_log( "Payment currency = {$currency_code}" );
 				update_post_meta( $donation_id, '_dgx_donate_donation_currency', $currency_code );
 			}
