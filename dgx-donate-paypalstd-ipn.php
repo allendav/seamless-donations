@@ -24,7 +24,9 @@ class Dgx_Donate_IPN_Handler {
 		dgx_donate_debug_log( 'IPN processing start' );
 
 		// Grab all the post data
-		$this->post_data = $_POST;
+		$post = file_get_contents('php://input');
+		parse_str($post, $data);
+		$this->post_data = $data;
 
 		// Set up for production or test
 		$this->configure_for_production_or_test();
@@ -57,22 +59,17 @@ class Dgx_Donate_IPN_Handler {
 	}
 
 	function get_ids_from_post() {
-		$this->session_id = isset( $_POST[ "custom" ] ) ? $_POST[ "custom" ] : '';
-		$this->transaction_id = isset( $_POST[ "txn_id" ] ) ? $_POST[ "txn_id" ] : '';
+		$this->session_id = isset( $this->post_data[ "custom" ] ) ? $this->post_data[ "custom" ] : '';
+		$this->transaction_id = isset( $this->post_data[ "txn_id" ] ) ? $this->post_data[ "txn_id" ] : '';
 	}
 
 	function reply_to_paypal() {
 		$req = 'cmd=_notify-validate';
 		$get_magic_quotes_exists = function_exists( 'get_magic_quotes_gpc' );
 
-		foreach ($_POST as $key => $value) {
-			if( $get_magic_quotes_exists && get_magic_quotes_gpc() == 1 ) {
-				$value = urlencode( stripslashes( $value ) );
-			} else {
-				$value = urlencode( $value );
-			}
-			$req .= "&$key=$value";
-		}
+		$data = $this->post_data;
+		$data['cmd'] = '_notify-validate';
+		$req = http_build_query($data);
 
 		$header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
 		$header .= $this->host_header;
@@ -103,14 +100,14 @@ class Dgx_Donate_IPN_Handler {
 	}
 
 	function handle_verified_ipn() {
-		$payment_status = $_POST["payment_status"];
+		$payment_status = $this->post_data["payment_status"];
 
 		dgx_donate_debug_log( "IPN VERIFIED for session ID {$this->session_id}" );
 		dgx_donate_debug_log( "Payment status = {$payment_status}" );
 		//dgx_donate_debug_log( print_r( $this->post_data, true ) ); // @todo don't commit
 
 		if ( "Completed" == $payment_status ) {
-			// Check if we've already logged a transaction with this same transaction id 
+			// Check if we've already logged a transaction with this same transaction id
 			$donation_id = get_donations_by_meta( '_dgx_donate_transaction_id', $this->transaction_id, 1 );
 
 			if ( 0 == count( $donation_id ) ) {
@@ -124,7 +121,7 @@ class Dgx_Donate_IPN_Handler {
 
 					// Retrieve the data from transient
 					$donation_form_data = get_transient( $this->session_id );
-	
+
 					if ( ! empty( $donation_form_data ) ) {
 						// Create a donation record
 						$donation_id = dgx_donate_create_donation_from_transient_data( $donation_form_data );
@@ -146,7 +143,7 @@ class Dgx_Donate_IPN_Handler {
 
 					// But first, flatten the array returned by get_donations_by_meta for _dgx_donate_session_id
 					$donation_id = $donation_id[0];
-					
+
 					$old_donation_id = $donation_id;
 					$donation_id = dgx_donate_create_donation_from_donation( $old_donation_id );
 					dgx_donate_debug_log( "Created donation {$donation_id} (recurring donation, donor data copied from donation {$old_donation_id}" );
