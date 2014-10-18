@@ -435,6 +435,8 @@ function dgx_donate_paypalstd_ajax_checkout()
 	// Log
 	dgx_donate_debug_log( '----------------------------------------' );
 	dgx_donate_debug_log( 'Donation transaction started' );
+	$php_version = phpversion();
+	dgx_donate_debug_log( "PHP Version: $php_version" );
 	dgx_donate_debug_log( 'Name: ' . $postData['FIRSTNAME'] . ' ' . $postData['LASTNAME'] );
 	dgx_donate_debug_log( 'Amount: ' . $postData['AMOUNT'] );
 	dgx_donate_debug_log( 'IPN: ' . plugins_url( '/dgx-donate-paypalstd-ipn.php', __FILE__ ) );

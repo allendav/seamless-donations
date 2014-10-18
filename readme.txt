@@ -4,7 +4,7 @@ Donate link: http://www.allendav.com/
 Tags: donation, donations, paypal, donate, non-profit, charity, gifts
 Requires at least: 3.4
 Tested up to: 4.0
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ Yes!
 6. Dashboard >> Thank You Email Templates
 
 == Changelog ==
+
+= 3.2.4 =
+* Fixed: Don't start a PHP session if one has already been started - props nikdow and gingrichdk
 
 = 3.2.3 =
 * Fixed: Unwanted extra space in front of Add me to your mailing list prompt

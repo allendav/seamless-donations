@@ -3,7 +3,7 @@
 Plugin Name: Seamless Donations
 Plugin URI: http://allendav.com/wordpress-plugins/seamless-donations-for-wordpress/
 Description: Making online donations easy for your visitors; making donor and donation management easy for you.  Receive donations (now including repeating donations), track donors and send customized thank you messages with Seamless Donations for WordPress.  Works with PayPal accounts.
-Version: 3.2.3
+Version: 3.2.4
 Author: allendav
 Author URI: http://www.allendav.com/
 License: GPL2
@@ -368,24 +368,18 @@ function dgx_donate_get_donor_detail_link($donorEmail)
 /******************************************************************************************************/
 function dgx_donate_init () {
 
-	// Start Session
-	$sessionID = "";
-	if ( isset( $_COOKIE['dgxdonate'] ) ) {
-		$sessionID = $_COOKIE['dgxdonate'];
+	// Start a PHP session if none has been started yet
+	// The means to test whether a session has been started varies by PHP version
+
+	if ( version_compare( phpversion(), '5.4.0', '>=' ) ) {
+		$session_already_started = ( session_status() === PHP_SESSION_ACTIVE );
+	} else {
+		$session_id = session_id();
+		$session_already_started = ( ! empty( $session_id ) );
 	}
 
-	if (!empty($sessionID))
-	{
-		session_id($sessionID);
+	if ( ! $session_already_started ) {
 		session_start();
-	}
-	else
-	{
-		// Shopping carts last for no more than 7 days
-		session_start();
-		$sessionID = session_id();
-		$domainName = $_SERVER['HTTP_HOST'];
-		setcookie("dgxdonate", $sessionID, time()+60*60*24*7, "/", $domainName);
 	}
 
 	// Register CPT
