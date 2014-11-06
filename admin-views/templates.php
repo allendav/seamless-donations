@@ -98,7 +98,7 @@ class Dgx_Donate_Admin_Templates_View {
 			'tributetext' => array(
 				'option' => 'dgx_donate_email_trib',
 				'label' => __( 'Tribute Gift', 'dgx-donate' ),
-				'description' => __( 'This message will be included when the donor elects to make their donation a tribute gift.', 'dgx-donate' ),
+				'description' => __( 'This message will be included when the donor elects to make their donation a tribute gift. (placeholder [honoreename] is available)', 'dgx-donate' ),
 				'type' => 'textarea',
 				'cols' => 40,
 				'rows' => 3
