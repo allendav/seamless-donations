@@ -13,7 +13,7 @@ include_once "./dgx-donate.php";
 
 class Dgx_Donate_IPN_Handler {
 
-	var $chat_back_url  = "ssl://www.paypal.com";
+	var $chat_back_url  = "tls://www.paypal.com";
 	var $host_header    = "Host: www.paypal.com\r\n";
 	var $post_data      = array();
 	var $session_id     = '';
@@ -24,8 +24,8 @@ class Dgx_Donate_IPN_Handler {
 		dgx_donate_debug_log( 'IPN processing start' );
 
 		// Grab all the post data
-		$post = file_get_contents('php://input');
-		parse_str($post, $data);
+		$post = file_get_contents( 'php://input' );
+		parse_str( $post, $data );
 		$this->post_data = $data;
 
 		// Set up for production or test
@@ -53,7 +53,7 @@ class Dgx_Donate_IPN_Handler {
 
 	function configure_for_production_or_test() {
 		if ( "SANDBOX" == get_option( 'dgx_donate_paypal_server' ) ) {
-			$this->chat_back_url = "ssl://www.sandbox.paypal.com";
+			$this->chat_back_url = "tls://www.sandbox.paypal.com";
 			$this->host_header   = "Host: www.sandbox.paypal.com\r\n";
 		}
 	}
@@ -64,23 +64,20 @@ class Dgx_Donate_IPN_Handler {
 	}
 
 	function reply_to_paypal() {
-		$req = 'cmd=_notify-validate';
-		$get_magic_quotes_exists = function_exists( 'get_magic_quotes_gpc' );
-
-		$data = $this->post_data;
-		$data['cmd'] = '_notify-validate';
-		$req = http_build_query($data);
+		$request_data = $this->post_data;
+		$request_data['cmd'] = '_notify-validate';
+		$request = http_build_query( $request_data );
 
 		$header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
 		$header .= $this->host_header;
 		$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-		$header .= "Content-Length: " . strlen( $req ) . "\r\n\r\n";
+		$header .= "Content-Length: " . strlen( $request ) . "\r\n\r\n";
 
 		$response = '';
 
 		$fp = fsockopen( $this->chat_back_url, 443, $errno, $errstr, 30 );
 		if ( $fp ) {
-			fputs( $fp, $header . $req );
+			fputs( $fp, $header . $request );
 
 			$done = false;
 			do {
@@ -104,10 +101,9 @@ class Dgx_Donate_IPN_Handler {
 
 		dgx_donate_debug_log( "IPN VERIFIED for session ID {$this->session_id}" );
 		dgx_donate_debug_log( "Payment status = {$payment_status}" );
-		//dgx_donate_debug_log( print_r( $this->post_data, true ) ); // @todo don't commit
 
 		if ( "Completed" == $payment_status ) {
-			// Check if we've already logged a transaction with this same transaction id
+			// Check if we've already logged a transaction with this same transaction id 
 			$donation_id = get_donations_by_meta( '_dgx_donate_transaction_id', $this->transaction_id, 1 );
 
 			if ( 0 == count( $donation_id ) ) {
@@ -121,7 +117,7 @@ class Dgx_Donate_IPN_Handler {
 
 					// Retrieve the data from transient
 					$donation_form_data = get_transient( $this->session_id );
-
+	
 					if ( ! empty( $donation_form_data ) ) {
 						// Create a donation record
 						$donation_id = dgx_donate_create_donation_from_transient_data( $donation_form_data );
@@ -143,7 +139,7 @@ class Dgx_Donate_IPN_Handler {
 
 					// But first, flatten the array returned by get_donations_by_meta for _dgx_donate_session_id
 					$donation_id = $donation_id[0];
-
+					
 					$old_donation_id = $donation_id;
 					$donation_id = dgx_donate_create_donation_from_donation( $old_donation_id );
 					dgx_donate_debug_log( "Created donation {$donation_id} (recurring donation, donor data copied from donation {$old_donation_id}" );

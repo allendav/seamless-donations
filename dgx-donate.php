@@ -3,7 +3,7 @@
 Plugin Name: Seamless Donations
 Plugin URI: http://allendav.com/wordpress-plugins/seamless-donations-for-wordpress/
 Description: Making online donations easy for your visitors; making donor and donation management easy for you.  Receive donations (now including repeating donations), track donors and send customized thank you messages with Seamless Donations for WordPress.  Works with PayPal accounts.
-Version: 3.2.4
+Version: 3.3.0
 Author: allendav
 Author URI: http://www.allendav.com/
 License: GPL2
