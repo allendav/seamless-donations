@@ -271,9 +271,9 @@ function dgx_donate_paypalstd_warning_section($formContent)
 function dgx_donate_paypalstd_payment_section( $form_content ) {
 	// Show the button that kicks it all off
 
-	$processing_image_url = plugins_url( '/images/ajax-loader.gif', __FILE__ );
-	$button_image_url = plugins_url( '/images/paypal_btn_donate_lg.gif', __FILE__ );
-	$disabled_button_image_url = plugins_url( '/images/paypal_btn_donate_lg_disabled.gif', __FILE__ );
+	$processing_image_url = apply_filters( 'seamless_donations_processing_image_url', plugins_url( '/images/ajax-loader.gif', __FILE__  ));
+	$button_image_url = apply_filters( 'seamless_donations_button_image_url', plugins_url( '/images/paypal_btn_donate_lg.gif', __FILE__ ) );
+	$disabled_button_image_url = apply_filters( 'seamless_donations_disabled_image_url', plugins_url( '/images/paypal_btn_donate_lg_disabled.gif', __FILE__ ) );
 
 	$section = "<div class='dgx-donate-form-section' id='dgx-donate-form-payment-section'>"
 		. "<p>"
@@ -283,6 +283,8 @@ function dgx_donate_paypalstd_payment_section( $form_content ) {
 		. "</p>"
 		. "<p class='dgx-donate-error-msg'></p>"
 		. "</div>\n";
+
+	$section = apply_filters( 'seamless_donations_form_payment_section', $section, $processing_image_url, $button_image_url, $disabled_button_image_url );
 
 	$form_content .= $section;
 
