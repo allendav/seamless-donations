@@ -94,7 +94,7 @@ function dgx_donate_init_defaults()
 	$tributeText = get_option('dgx_donate_email_trib');
 	if (empty($tributeText))
 	{
-		$tributeText = "You have asked to make this donation in honor of or memory of someone else.  Thank you!  We will notify the ";
+		$tributeText = "You have asked to make this donation in honor of or memory of [honoreename].  Thank you!  We will notify the ";
 		$tributeText .= "honoree within the next 5-10 business days.";
 		update_option('dgx_donate_email_trib', $tributeText);
 	}

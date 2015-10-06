@@ -831,6 +831,8 @@ function dgx_donate_send_thank_you_email($donationID, $testAddress="")
 		$mailingListJoin = "TRUE";
 		// tribute y/n
 		$tribute = "TRUE";
+		// honoreename
+		$honoreeName = "Bogey";
 		// employer match
 		$employer_name = "Global Corporation";
 	}
@@ -858,6 +860,8 @@ function dgx_donate_send_thank_you_email($donationID, $testAddress="")
 		$mailingListJoin = get_post_meta($donationID, '_dgx_donate_add_to_mailing_list', true);
 		// tribute y/n
 		$tribute = get_post_meta($donationID, '_dgx_donate_tribute_gift', true);
+		// honoreename
+		$honoreeName = get_post_meta($donationID, '_dgx_donate_honoree_name', true);
 		// employer match
 		$employer_name = get_post_meta($donationID, '_dgx_doname_employer_name', true);
 	}
@@ -910,6 +914,7 @@ function dgx_donate_send_thank_you_email($donationID, $testAddress="")
 	if ( ! empty( $tribute ) ) {
 		$text = get_option( 'dgx_donate_email_trib' );
 		$text = stripslashes( $text );
+		$text = str_replace( "[honoreename]", $honoreeName, $text );
 		$emailBody .= $text;
 		$emailBody .= "\n\n";
 	}
